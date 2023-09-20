@@ -2,6 +2,7 @@ from flask import Flask, request
 from faker import Faker
 import csv
 import requests
+import json
 
 
 app = Flask(__name__)
@@ -51,6 +52,17 @@ def human_mean():
     average_weight = round((total_weight_kg / num_rows), 2) if num_rows > 0 else 0
     answer = f"Середній зріст: {average_height} см.<br>Середня вага: {average_weight} кг."
     return answer
+
+
+@app.route('/space/')
+def astros():
+    data = requests.get("http://api.open-notify.org/astros.json").json()
+    astro_number = "There is no astros in orbit!"
+    for key, value in data.items():
+        if key == "number":
+            astro_number = f"There is {value} astros in orbit"
+            break
+    return astro_number
 
 
 if __name__ == "__main__":
